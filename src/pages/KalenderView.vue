@@ -43,7 +43,13 @@
 </template>
 
 <script>
-/** Probleme der Methods teilweise mit Hilfe von ChatGPT gelöst */
+/** Probleme der Methods teilweise mit Hilfe von ChatGPT gelöst
+ * Beim erstellen der Scripts gab es Syntax schwierigkeiten, welche dazu geführt haben, dass die Seite nicht mehr geladen hat
+ * oder der Kalender nicht mehr funktioniert hat. Um diese zu beheben wurden die Scripts einmal von ChatGPT korrigiert.
+ * Die Fehlerquote war erstaunlich hoch, da in dem Code von ChatGPT selber fehler aufgetreten sind, die er in dem gegebenen Context hätte erkennen müssen.
+ * Zum Debuggen und als Hilfestellung bei Syntax-Fehlern war ChatGPT jedoch trotzdem sehr hilfreich, da ein Verständnis für das Problem geschaffen wurde und
+ * ausführlich erläutert wurde, wie es zum Problem kam, sodass ein Lerneffekt bestand.
+ */
 export default {
   data() {
     return {

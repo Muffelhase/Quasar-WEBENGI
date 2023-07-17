@@ -289,6 +289,8 @@ h6 span {
 </style>
 
 <script>
+/* Aufgrund von Problemen mit Firebase, haben wir die scripts erstmal auskommentiert,
+damit die Seite nicht Crashed, wenn sie nicht mit Firebase verlinkt wurde */
 /* import { auth } from "src/plugin/firebase.js";
 
 export default {
