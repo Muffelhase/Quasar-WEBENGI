@@ -1,0 +1,11 @@
+{
+  "projects": {
+    "default": "fawifhnr1"
+  },
+  "targets": {},
+  "etags": {
+    "fawifhnr1": {
+      "extensionInstances": {}
+    }
+  }
+}

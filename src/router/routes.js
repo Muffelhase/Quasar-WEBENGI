@@ -1,3 +1,5 @@
+import router from ".";
+
 const routes = [
   {
     path: "/",
@@ -39,6 +41,13 @@ const routes = [
         path: "Beitrag-drei",
         component: () => import("pages/news/beitrag-drei.vue"),
       },
+      {
+        path: "ErstiListe",
+        component: () => import("pages/ErstiPage.vue"),
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
 
@@ -49,5 +58,18 @@ const routes = [
     component: () => import("pages/ErrorNotFound.vue"),
   },
 ];
+
+routes.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (getAuth().currentUser) {
+      next();
+    } else {
+      alert("you dont have access!");
+      next("/");
+    }
+  } else {
+    next();
+  }
+});
 
 export default routes;

@@ -1,9 +1,9 @@
 <template>
-  <!--Statische Bildergallerie-->
+  <!-- Statische Bildergallerie -->
   <div>
     <h2 style="text-align: center">Eindrücke der FH Kiel</h2>
     <div v-for="image in images" :key="image" class="gallery-images">
-      <q-img :src="image" :key="image" />
+      <q-img :src="getImageURL(image)" :key="image" />
     </div>
     <div class="footer">
       <h3>Hast du noch mehr?</h3>
@@ -22,21 +22,32 @@
 </template>
 
 <script>
+import { getDownloadURL } from 'firebase/storage';
+import { storage } from '@/firebase';
+
 export default {
   data() {
     return {
       images: [
         // Die genutzten Bilder wurden heruntergeladen von Unsplash: https://unsplash.com/de/s/fotos/University
-        "src/assets/gallery/Campus.jpg",
-        "src/assets/gallery/Gebäude.jpg",
-        "src/assets/gallery/Bib.jpg",
-        "src/assets/gallery/Hörsaal.jpg",
-        "src/assets/gallery/Großer Hörsaal.jpg",
-        "src/assets/gallery/Arbeitsraum.jpg",
-        "src/assets/gallery/Vorlesung.jpg",
+        'Gallery Photos/Campus.jpg',
+        'Gallery Photos/Gebäude.jpg',
+        'Gallery Photos/Bib.jpg',
+        'Gallery Photos/Hörsaal.jpg',
+        'Gallery Photos/Großer Hörsaal.jpg',
+        'Gallery Photos/Arbeitsraum.jpg',
+        'Gallery Photos/Vorlesung.jpg',
         // Hier können händisch mehr Bilder hinzugefügt werden
       ],
     };
+  },
+  methods: {
+    async getImageURL(imagePath) {
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child(imagePath);
+      const downloadURL = await getDownloadURL(imageRef);
+      return downloadURL;
+    },
   },
 };
 </script>

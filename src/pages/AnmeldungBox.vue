@@ -18,7 +18,7 @@
     </head>
 
     <body>
-      <!--Login/Regestrier Box-->
+      <!--Login/Registrier Box-->
       <div class="section">
         <div class="container">
           <div class="row full-height justify-content-center">
@@ -92,6 +92,7 @@
                             <i class="input-icon uil uil-lock-alt"></i>
                           </div>
                           <a @click="register" class="btn mt-4">Registrieren</a>
+                          <div>v-if="errMsg">{{ errMsg }}</div>
                         </div>
                       </div>
                     </div>
@@ -106,7 +107,6 @@
   </q-page>
 </template>
 
-//
 <style>
 @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900");
 body {
@@ -288,49 +288,43 @@ h6 span {
 }
 </style>
 
-<script>
-/* import { auth } from "src/plugin/firebase.js";
+<script setup>
+import { ref } from "vue";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "vue-router";
+const email = ref("");
+const password = ref("");
+const errMsg = ref("");
+const router = useRouter();
 
-export default {
-  data() {
-    return {
-      email: "",
-      password: "",
-      resetEmail: "",
-    };
-  },
-  methods: {
-    login() {
-      auth
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          // Erfolgreich angemeldet
-        })
-        .catch((error) => {
-          // Fehler bei der Anmeldung
-        });
-    },
+const regist = () => {
+  const auth = getAuth();
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .then((data) => {
+      console.log("Sucessfully signed");
 
-    register() {
-      auth
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          // Erfolgreich registriert
-        })
-        .catch((error) => {
-          // Fehler bei der Registrierung
-        });
-    },
-    resetPassword() {
-      auth
-        .sendPasswordResetEmail(this.resetEmail)
-        .then(() => {
-          // Zurücksetzungs-E-Mail wurde gesendet
-        })
-        .catch((error) => {
-          // Fehler beim Senden der Zurücksetzungs-E-Mail
-        });
-    },
-  },
-}; */
+      console.log(auth.currentUser);
+
+      router.push("/feed");
+    })
+    .catch((error) => {
+      console.log(error.code);
+      switch (error.code) {
+        case "auth/invalid email":
+          errMsg.value = "Invalid email";
+          break;
+        case "auth/user-not-found":
+          errMsg.value = "No account with this email was found";
+          break;
+        case "auth/wrong-password":
+          errMsg.value = "Incorrect password";
+          break;
+        default:
+          errMsg.value = "Email or password was incorrect";
+          alert(error.message);
+      }
+    });
+};
+
+const signInWithGoogle = () => {};
 </script>
