@@ -1,150 +1,169 @@
 <template>
-  <div>
-    <h1>Veranstaltungskalender</h1>
-
-    <div class="calendar">
-      <div class="header">
-        <button id="prevButton">&lt;</button>
-        <h2 id="monthYear"></h2>
-        <button id="nextButton">&gt;</button>
+  <div class="q-pa-md d-flex flex-center">
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <button @click="prevMonth">&lt;&lt; Letzter Monat</button>
+        <h2>{{ currentMonth }}</h2>
+        <h5>
+          Bitte vergleichen Sie die <br />
+          Daten hier mit ihren eigenen Kalendern
+        </h5>
+        <button @click="nextMonth">Nächster Monat &gt;&gt;</button>
       </div>
-      <table id="calendarTable">
-        <thead>
-          <tr>
-            <th>So</th>
-            <th>Mo</th>
-            <th>Di</th>
-            <th>Mi</th>
-            <th>Do</th>
-            <th>Fr</th>
-            <th>Sa</th>
-          </tr>
-        </thead>
-        <tbody id="calendarBody"></tbody>
-      </table>
-    </div>
-    <div id="eventForm">
-      <input type="text" id="eventName" placeholder="Veranstaltungsname" />
-      <input type="date" id="eventDate" placeholder="Datum" />
-      <button id="addEventButton">Hinzufügen</button>
+      <div class="calendar-body">
+        <!--Hier gehörten die Wochentage hin, aber es gab Probleme beim Alignen der richten Tage mit den jeweils richtigen Daten
+
+          <div class="calendar-weekdays">
+          <div v-for="day in weekdays" :key="day" class="calendar-day">
+            {{ day }}
+          </div>
+        </div>
+      -->
+        <div class="calendar-days">
+          <div
+            v-for="(day, index) in daysInMonth"
+            :key="index"
+            class="calendar-day"
+          >
+            <div class="day-number">{{ day }}</div>
+            <div class="events">
+              <div
+                v-for="event in getEventsForDay(day)"
+                :key="event"
+                class="event"
+              >
+                {{ event }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+/** Probleme der Methods teilweise mit Hilfe von ChatGPT gelöst
+ * Beim erstellen der Scripts gab es Syntax schwierigkeiten, welche dazu geführt haben, dass die Seite nicht mehr geladen hat
+ * oder der Kalender nicht mehr funktioniert hat. Um diese zu beheben wurden die Scripts einmal von ChatGPT korrigiert.
+ * Die Fehlerquote war erstaunlich hoch, da in dem Code von ChatGPT selber fehler aufgetreten sind, die er in dem gegebenen Context hätte erkennen müssen.
+ * Zum Debuggen und als Hilfestellung bei Syntax-Fehlern war ChatGPT jedoch trotzdem sehr hilfreich, da ein Verständnis für das Problem geschaffen wurde und
+ * ausführlich erläutert wurde, wie es zum Problem kam, sodass ein Lerneffekt bestand.
+ */
 export default {
-  mounted() {
-    document.addEventListener("DOMContentLoaded", function () {
-      var currentDate = new Date();
-      var currentMonth = currentDate.getMonth();
-      var currentYear = currentDate.getFullYear();
+  data() {
+    return {
+      currentMonth: "",
+      daysInMonth: [],
+      currentDate: new Date(),
+      customEvents: [
+        { date: "2023-09-01", title: "Wintersemester Beginn" },
+        { date: "2023-09-15", title: "Anfang der Veranstaltungen" },
+        { date: "2023-09-19", title: "Ersti-Fahrt" },
+        /**{ date: "jjjj-mm-tt", title: "Titel" }, */
+      ],
+    };
+  },
 
-      var monthYearElement = document.getElementById("monthYear");
-      var prevButton = document.getElementById("prevButton");
-      var nextButton = document.getElementById("nextButton");
-      var calendarBody = document.getElementById("calendarBody");
-      var eventNameInput = document.getElementById("eventName");
-      var eventDateInput = document.getElementById("eventDate");
-      var addEventButton = document.getElementById("addEventButton");
+  methods: {
+    updateCalendar() {
+      const year = this.currentDate.getFullYear();
+      const month = this.currentDate.getMonth() + 1;
+      this.currentMonth =
+        this.currentDate.toLocaleString("default", { month: "long" }) +
+        " " +
+        year;
+      this.daysInMonth = this.getDaysInMonth(year, month);
+    },
+    prevMonth() {
+      this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+      this.updateCalendar();
+    },
 
-      /*function renderCalendar() {
-        var monthYearElement = document.getElementById("monthYear");
-        var calendarBody = document.getElementById("calendarBody");
+    nextMonth() {
+      this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+      this.updateCalendar();
+    },
 
-        // Clear the calendar body
-        calendarBody.innerHTML = "";
+    getDaysInMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    },
 
-        // Get the first day of the month
-        var firstDay = new Date(currentYear, currentMonth, 1);
+    getEventsForDay(day) {
+      const year = this.currentDate.getFullYear();
+      const month = this.currentDate.getMonth() + 1;
 
-        // Get the number of days in the month
-        var lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const eventsForDay = this.customEvents.filter(
+        (event) =>
+          event.date ===
+          `${year}-${month.toString().padStart(2, "0")}-${day
+            .toString()
+            .padStart(2, "0")}`
+      );
 
-        // Set the month and year in the header
-        monthYearElement.textContent = `${currentMonth + 1}/${currentYear}`;
-
-        // Calculate the starting day of the week
-        var startDayOfWeek = firstDay.getDay();
-        if (startDayOfWeek === 0) {
-          startDayOfWeek = 7; // Convert Sunday (0) to 7
-        }
-
-        // Create calendar rows and cells
-        var row = document.createElement("tr");
-
-        // Add empty cells for previous month's days
-        for (var i = 1; i < startDayOfWeek; i++) {
-          var cell = document.createElement("td");
-          row.appendChild(cell);
-        }
-
-        // Populate calendar cells with days of the month
-        for (var day = 1; day <= lastDay; day++) {
-          var cell = document.createElement("td");
-          cell.textContent = day;
-          row.appendChild(cell);
-
-          // Start a new row after each 7th day
-          if ((day + startDayOfWeek - 1) % 7 === 0) {
-            calendarBody.appendChild(row);
-            row = document.createElement("tr");
-          }
-        }
-
-        // Add the remaining cells
-        calendarBody.appendChild(row);
-      }*/
-
-      /*prevButton.addEventListener("click", function () {
-        currentYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-        currentMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-        renderCalendar();
-      });*/
-
-      nextButton.addEventListener("click", function () {
-        currentYear = currentMonth === 11 ? currentYear + 1 : currentYear;
-        currentMonth = currentMonth === 11 ? 0 : currentMonth + 1;
-        renderCalendar();
-      });
-    });
+      return eventsForDay.map((event) => event.title);
+    },
+  },
+  created() {
+    this.updateCalendar();
   },
 };
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900");
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #f9f9f9;
+.calendar-container {
+  width: 400px;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #152565;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  border-radius: 8px;
 }
-h1,
-h2 {
+
+.calendar-header {
   text-align: center;
+  padding: 16px;
 }
-.calender {
-  width: 100%;
-  border-collapse: collaps;
-}
-th,
-td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
-}
-th {
-  background-color: #eee;
-}
-.header {
+
+.calendar-weekdays {
   display: flex;
-  justify-content: space-beetween;
-  align-items: center;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  background-color: #152565;
+  padding: 8px;
 }
-#eventForm {
+
+.calendar-day {
+  width: calc(100% / 7);
   text-align: center;
-  margin-bottom: 20px;
+  padding: 8px;
 }
-#addEventButton {
-  margin-top: 10pc;
+
+.calendar-day:last-child {
+  border-right: none;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.day-number {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.events {
+  margin-top: 4px;
+}
+
+.event {
+  background-color: #d3d3d33d;
+  color: #ffffff;
+  padding: 4px;
+  border-radius: 4px;
+  margin-bottom: 4px;
 }
 </style>

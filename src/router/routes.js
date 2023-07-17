@@ -26,7 +26,7 @@ const routes = [
         component: () => import("pages/KalenderView.vue"),
       },
       {
-        path: "Gallerie",
+        path: "Galerie",
         component: () => import("pages/GalleryView.vue"),
       },
       {

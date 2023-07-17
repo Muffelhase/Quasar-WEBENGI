@@ -64,10 +64,10 @@ const linksList = [
     page: "Kalender",
   },
   {
-    title: "Gallerie",
+    title: "Galerie",
     caption: "Eindrücke des Fachbereichs Wirtschaft",
     icon: "camera",
-    page: "Gallerie",
+    page: "Galerie",
   },
   {
     title: "Ersti-Fahrt",

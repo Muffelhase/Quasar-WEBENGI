@@ -288,22 +288,10 @@ h6 span {
 }
 </style>
 
-<script setup>
-import { ref } from "vue";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "vue-router";
-const email = ref("");
-const password = ref("");
-const errMsg = ref("");
-const router = useRouter();
-
-const regist = () => {
-  const auth = getAuth();
-  signInWithEmailAndPassword(auth, email.value, password.value)
-    .then((data) => {
-      console.log("Sucessfully signed");
-
-      console.log(auth.currentUser);
+<script>
+/* Aufgrund von Problemen mit Firebase, haben wir die scripts erstmal auskommentiert,
+damit die Seite nicht Crashed, wenn sie nicht mit Firebase verlinkt wurde */
+/* import { auth } from "src/plugin/firebase.js";
 
       router.push("/feed");
     })
