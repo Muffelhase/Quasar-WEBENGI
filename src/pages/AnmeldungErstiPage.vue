@@ -40,6 +40,7 @@ export default {
 
   methods: {
     sendConfirmation() {
+      /*<<< Wir hatten Probleme beim Einbiden von der Website auf Firebase>>>*/
       /*var email = document.getElementById("email").value; (js funktion für 'normale HTML Seiten' ohne Quasar*/
       /*    alert(
         "eine Bestätigung wurde an " +
@@ -62,8 +63,6 @@ export default {
     },
   },
 };
-
-/*<<< Wir hatten Probleme beim Einbiden von der Website auf Firebase>>>*/
 </script>
 
 <style>
