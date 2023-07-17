@@ -28,9 +28,12 @@
 </template>
 
 <script>
+/*import { db } from "~/plugins/firebase.js"; */
 export default {
   data() {
     return {
+      vorname: "",
+      nachname: "",
       email: "",
     };
   },
@@ -38,16 +41,31 @@ export default {
   methods: {
     sendConfirmation() {
       /*var email = document.getElementById("email").value; (js funktion für 'normale HTML Seiten' ohne Quasar*/
-
-      alert(
+      /*    alert(
         "eine Bestätigung wurde an " +
           this.email +
           " gesendet, wir freuen uns auf dich!"
       );
     },
+    async saveData() {
+      const data = {
+        vorname: this.vorname,
+        nachname: this.nachname,
+        email: this.email,
+      };
+      await db.collection("erstiFahrtAnmeldungen").add(data);
+      this.vorname = "";
+      this.nachname = "";
+      window.location.reload();
+    },
+  },*/
+    },
   },
 };
+
+/*<<< Wir hatten Probleme beim Einbiden von der Website auf Firebase>>>*/
 </script>
+
 <style>
 @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900");
 body {
