@@ -48,8 +48,6 @@ Bitte senden Sie Ihre Bewerbung per E-Mail an <a
         </p>
       </div>
       <div class="three">
-        <!--Beispiel Parapharsiert teilweise durch ChatGPT von: Gehde, L. (8. Juli 2023). Kunst und Kultur auf dem FH-Campus - auch in den Semesterferien. FH Seite. Zugriff von:
-      https://www.fh-kiel.de/news/kunst-und-kultur-auf-dem-fh-campus-auch-in-den-semesterferien/-->
         <h2>Kunst und Kultur auf dem Campus der FH außerhalb der Vorlesungszeiten</h2>
         <p>
           Der Campus der Fachhochschule Kiel bietet eine vielfältige Palette an Kultureinrichtungen, die es wert sind, außerhalb der Vorlesungszeiten erkundet zu werden.
